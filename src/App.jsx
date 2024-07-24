@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useState } from 'react'
 
 import './App.css'
+import useFetch from './hooks/useFetch';
 function reducer(state, action) {
   switch (action.type) {
     case "incremented_quantity": {
@@ -46,23 +47,25 @@ function reducer(state, action) {
 function App() {
 
   const [state, dispatch] = useReducer(reducer, { price: 10, quantity: 2, sellerName: "Mark", age: 18, totalPrice: 10 })
-  const [movies, setMovies] = useState([]);
-  useEffect(() => {
-    const fetchMovies = async () => {
-      const API = "https://api.themoviedb.org/3/movie/popular?api_key=24ce4eec248652f741c228a1d8a1a21c";
-      try {
-        const response = await fetch(API);
-        const data = await response.json();
+ 
+  // useEffect(() => {
+  //   const fetchMovies = async () => {
+  //     const API = "https://api.themoviedb.org/3/movie/popular?api_key=24ce4eec248652f741c228a1d8a1a21c";
+  //     try {
+  //       const response = await fetch(API);
+  //       const data = await response.json();
 
-        setMovies(data);
-      } catch (error) {
-        console.error("Failed to fetch movie data: ", error)
-      }
-    }
-    fetchMovies();
-  }, [])
+  //       setMovies(data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch movie data: ", error)
+  //     }
+  //   }
+  //   fetchMovies();
+  // }, [])
 
-  console.log(movies);
+  const { data } = useFetch("https://pokeapi.co/api/v2/pokemon/pikachu");
+
+  console.log(data)
   const handleIncrementedQuantity = () => {
     dispatch({ type: "incremented_quantity" })
   }
