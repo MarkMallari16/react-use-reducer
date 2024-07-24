@@ -1,24 +1,27 @@
-import { useReducer } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 
 import './App.css'
 function reducer(state, action) {
   switch (action.type) {
-    case "incremented_price": {
+    case "incremented_quantity": {
+      const newQuantity = Math.max(0, state.quantity + 1);
       return {
         ...state,
-        price: Math.max(0, state.price + 10)
+        quantity: newQuantity,
+        totalPrice: state.price * newQuantity
       }
     }
-    case "decremented_price": {
+    case "decremented_quantity": {
+      const newQuantity = Math.max(0, state.quantity - 1);
       return {
         ...state,
-        price: Math.max(0, state.price - 10)
+        quantity: newQuantity,
+        totalPrice: state.price * newQuantity
       }
     }
     case "incremented_age": {
       return {
         ...state,
-        sellerName: state.sellerName,
         age: state.age + 1
       }
     }
@@ -28,19 +31,43 @@ function reducer(state, action) {
         sellerName: action.newName
       }
     }
+    case "total_price": {
+      return {
+        ...state,
+        totalPrice: state.price
+      }
+    }
+
     default:
       throw new Error(`Unknown action type: ${action.type}`)
   }
 
 }
 function App() {
-  const [state, dispatch] = useReducer(reducer, { price: 10, sellerName: "Mark", age: 18 })
 
-  const handleIncrementedPrice = () => {
-    dispatch({ type: "incremented_price" })
+  const [state, dispatch] = useReducer(reducer, { price: 10, quantity: 2, sellerName: "Mark", age: 18, totalPrice: 10 })
+  const [movies, setMovies] = useState([]);
+  useEffect(() => {
+    const fetchMovies = async () => {
+      const API = "https://api.themoviedb.org/3/movie/popular?api_key=24ce4eec248652f741c228a1d8a1a21c";
+      try {
+        const response = await fetch(API);
+        const data = await response.json();
+
+        setMovies(data);
+      } catch (error) {
+        console.error("Failed to fetch movie data: ", error)
+      }
+    }
+    fetchMovies();
+  }, [])
+
+  console.log(movies);
+  const handleIncrementedQuantity = () => {
+    dispatch({ type: "incremented_quantity" })
   }
-  const handleDecrementedPrice = () => {
-    dispatch({ type: "decremented_price" })
+  const handleDecrementedQuantity = () => {
+    dispatch({ type: "decremented_quantity" })
   }
   const handleSellerName = (e) => {
     dispatch({ type: "changed_name", newName: e.target.value });
@@ -48,14 +75,24 @@ function App() {
   const handleAge = () => {
     dispatch({ type: "incremented_age" })
   }
+
   return (
     <>
       <p>
         The current price of banana is ${state.price}
       </p>
 
-      <button onClick={handleDecrementedPrice}>Decrease Price</button>
-      <button onClick={handleIncrementedPrice}>Increase Price</button>
+      <button onClick={handleDecrementedQuantity}>Decrement Quantity</button>
+      <button onClick={handleIncrementedQuantity}>Increment Quantity</button>
+      <div>
+        <h1>Summary</h1>
+        <p>Product Price: {state.price}</p>
+        <p>Product Quantity: {state.quantity}</p>
+        <p>Total Price {state.totalPrice}</p>
+
+      </div>
+
+
       <p>Name of the seller: {state.sellerName}</p>
       <input type="text" value={state.sellerName} onChange={handleSellerName} />
       <p>Hey {state.sellerName} you are {state.age} years old</p>
