@@ -4,6 +4,13 @@ import './App.css'
 import useFetch from './hooks/useFetch';
 function reducer(state, action) {
   switch (action.type) {
+    case "incremented_price":
+      const newPrice = Math.max(0, state.price + 1)
+      return {
+        ...state,
+        price: newPrice,
+        totalPrice: newPrice * state.quantity
+      }
     case "incremented_quantity": {
       const newQuantity = Math.max(0, state.quantity + 1);
       return {
@@ -13,7 +20,7 @@ function reducer(state, action) {
       }
     }
     case "decremented_quantity": {
-      const newQuantity = Math.max(0, state.quantity - 1);
+      const newQuantity = Math.max(1, state.quantity - 1);
       return {
         ...state,
         quantity: newQuantity,
@@ -32,13 +39,6 @@ function reducer(state, action) {
         sellerName: action.newName
       }
     }
-    case "total_price": {
-      return {
-        ...state,
-        totalPrice: state.price
-      }
-    }
-
     default:
       throw new Error(`Unknown action type: ${action.type}`)
   }
@@ -50,7 +50,9 @@ function App() {
 
   const { data } = useFetch("https://pokeapi.co/api/v2/pokemon/pikachu");
   //"https://api.themoviedb.org/3/movie/popular?api_key=24ce4eec248652f741c228a1d8a1a21c"
-  console.log(data)
+  const handleIncrementedPrice = () => {
+    dispatch({ type: "incremented_price" })
+  }
   const handleIncrementedQuantity = () => {
     dispatch({ type: "incremented_quantity" })
   }
@@ -69,7 +71,7 @@ function App() {
       <p>
         The current price of banana is ${state.price}
       </p>
-
+      <button onClick={handleIncrementedPrice}>Increment Price</button>
       <button onClick={handleDecrementedQuantity}>Decrement Quantity</button>
       <button onClick={handleIncrementedQuantity}>Increment Quantity</button>
       <div>
