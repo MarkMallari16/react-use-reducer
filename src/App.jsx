@@ -95,8 +95,8 @@ function App() {
         <button className='btn btn-error' onClick={handleDecrementedQuantity}>Decrement Quantity</button>
         <button className='btn btn-primary' onClick={handleIncrementedQuantity}>Increment Quantity</button>
       </div>
-      <div className='mt-3'>
-        <h1 className='text-2xl font-medium'>Summary</h1>
+      <div className='mt-6'>
+        <h1 className='text-2xl font-medium mb-1'>Summary</h1>
         <p>Product Price: {state.price}</p>
         <p>Product Quantity: {state.quantity}</p>
         <p>Total Price {state.totalPrice}</p>
