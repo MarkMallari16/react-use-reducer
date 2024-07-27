@@ -4,13 +4,25 @@ import './App.css'
 import useFetch from './hooks/useFetch';
 function reducer(state, action) {
   switch (action.type) {
-    case "incremented_price":
-      const newPrice = Math.max(0, state.price + 1)
+    case "incremented_price": {
+      const newPrice = Math.max(1, state.price + 1)
       return {
         ...state,
         price: newPrice,
         totalPrice: newPrice * state.quantity
       }
+
+    }
+    case "decremented_price": {
+      const newPrice = Math.max(1, state.price - 1)
+      return {
+        ...state,
+        price: newPrice,
+        totalPrice: newPrice * state.quantity
+      }
+
+    }
+
     case "incremented_quantity": {
       const newQuantity = Math.max(0, state.quantity + 1);
       return {
@@ -53,6 +65,9 @@ function App() {
   const handleIncrementedPrice = () => {
     dispatch({ type: "incremented_price" })
   }
+  const handleDecrementedPrice = () => {
+    dispatch({ type: "decremented_price" })
+  }
   const handleIncrementedQuantity = () => {
     dispatch({ type: "incremented_quantity" })
   }
@@ -67,27 +82,35 @@ function App() {
   }
 
   return (
-    <>
+    <div className='h-screen p-10'>
+      <h1 className="text-2xl">Practicing Use Reducer</h1>
       <p>
         The current price of banana is ${state.price}
       </p>
-      <button onClick={handleIncrementedPrice}>Increment Price</button>
-      <button onClick={handleDecrementedQuantity}>Decrement Quantity</button>
-      <button onClick={handleIncrementedQuantity}>Increment Quantity</button>
-      <div>
-        <h1>Summary</h1>
+      <div className="flex gap-3 mt-3">
+        <button className='btn btn-error' onClick={handleDecrementedPrice}>Decremented Price</button>
+        <button className='btn btn-primary' onClick={handleIncrementedPrice}>Increment Price</button>
+      </div>
+      <div className='flex gap-3 mt-3'>
+        <button className='btn btn-error' onClick={handleDecrementedQuantity}>Decrement Quantity</button>
+        <button className='btn btn-primary' onClick={handleIncrementedQuantity}>Increment Quantity</button>
+      </div>
+      <div className='mt-3'>
+        <h1 className='text-2xl font-medium'>Summary</h1>
         <p>Product Price: {state.price}</p>
         <p>Product Quantity: {state.quantity}</p>
         <p>Total Price {state.totalPrice}</p>
 
       </div>
-
-
-      <p>Name of the seller: {state.sellerName}</p>
-      <input type="text" value={state.sellerName} onChange={handleSellerName} />
-      <p>Hey {state.sellerName} you are {state.age} years old</p>
-      <button onClick={handleAge}>Increase Age</button>
-    </>
+      <div>
+        <div className='my-3'>
+          <p>Name of the seller: {state.sellerName}</p>
+          <input className='input input-bordered' type="text" value={state.sellerName} onChange={handleSellerName} />
+        </div>
+        <p>Hey {state.sellerName} you are {state.age} years old</p>
+        <button className='btn btn-primary mt-1' onClick={handleAge} >Increase Age</button>
+      </div>
+    </div>
   )
 }
 
