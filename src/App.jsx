@@ -83,7 +83,7 @@ function App() {
 
   return (
     <div className='h-screen p-10'>
-      <h1 className="text-2xl">Practicing Use Reducer</h1>
+      <h1 className="text-2xl font-bold">Practicing Use Reducer</h1>
       <p>
         The current price of banana is ${state.price}
       </p>
